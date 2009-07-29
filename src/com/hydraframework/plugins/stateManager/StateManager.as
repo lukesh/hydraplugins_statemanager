@@ -1,15 +1,16 @@
 package com.hydraframework.plugins.stateManager {
-    import com.hydraframework.plugins.stateManager.events.StateEvent;
     import com.hydraframework.core.mvc.patterns.plugin.Plugin;
-
+    import com.hydraframework.plugins.stateManager.events.StateEvent;
+    
     import flash.events.Event;
     import flash.utils.setTimeout;
-
+    
     import mx.collections.ArrayCollection;
     import mx.controls.treeClasses.ITreeDataDescriptor;
     import mx.events.BrowserChangeEvent;
     import mx.managers.BrowserManager;
     import mx.managers.IBrowserManager;
+    import mx.utils.URLUtil;
 
     public class StateManager extends Plugin {
         /*
@@ -93,6 +94,18 @@ package com.hydraframework.plugins.stateManager {
             return _labelField;
         }
 
+		private var _dataField:String;
+		
+		public function set dataField(value:String):void {
+			if (value != _dataField) {
+				_dataField = value;
+			}
+		}
+		
+		public function get dataField():String {
+			return _dataField;
+		}
+
         private var _currentState:Object;
 
         public function set currentState(value:Object):void {
@@ -162,13 +175,28 @@ package com.hydraframework.plugins.stateManager {
         }
 
         private function actuallyUpdateURL():void {
-            browserManager.setFragment(escape(getCurrentKey()));
+        	var stateString:String = URLUtil.objectToString(this._currentState);
+            browserManager.setFragment(escape(getCurrentKey() + stateString));
         }
 
         private function parseURL(event:Event):void {
             parsing = true;
-            var view:String = unescape(browserManager.fragment as String);
-            loadState(view as String);
+            var view:String;
+            var queryString:String;
+            var fullFragment:String = unescape(browserManager.fragment as String);
+            var parts:Array = fullFragment.split("?");
+            var data:Object = null;
+            
+            if (parts.length > 0) {
+            	view = parts[0];
+            }
+            
+            if (parts.length > 1) {
+            	queryString = parts[1];
+				data = URLUtil.stringToObject(queryString);
+            }
+            
+            loadState(view as String, data);
             parsing = false;
         }
 
@@ -195,13 +223,18 @@ package com.hydraframework.plugins.stateManager {
             return null;
         }
 
-        private function loadState(key:String):void {
+        private function loadState(key:String, data:Object = null):void {
             if (!this._dataProvider) {
-                setTimeout(loadState, 500, key);
+                setTimeout(loadState, 500, key, data);
                 return;
             }
 
             var state:Object = retrieveStateByKey(key);
+            
+            if (data != null && state.hasOwnProperty(_dataField)) {
+            	state[_dataField] = data;
+            }
+            
             setState(state, false);
         }
     }

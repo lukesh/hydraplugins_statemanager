@@ -1,6 +1,7 @@
 package com.hydraframework.plugins.stateManager {
-    import com.hydraframework.plugins.stateManager.events.StateEvent;
+
     import com.hydraframework.core.mvc.patterns.plugin.Plugin;
+    import com.hydraframework.plugins.stateManager.events.StateEvent;
 
     import flash.events.Event;
     import flash.utils.setTimeout;
@@ -11,7 +12,7 @@ package com.hydraframework.plugins.stateManager {
     import mx.managers.BrowserManager;
     import mx.managers.IBrowserManager;
 
-    public class StateManager extends Plugin {
+    public class StateManager extends Plugin implements IStateManager {
         /*
            --------------------------------------------------------------------
 
@@ -22,15 +23,12 @@ package com.hydraframework.plugins.stateManager {
 
         public static const NAME:String = "StateManager";
 
-        private static const _instance:StateManager = new StateManager();
-
-        public static function getInstance():StateManager {
-            return _instance;
-        }
-        
-        public static function get instance():StateManager {
-            return _instance;
-        }
+//        private static const _instance:IStateManager = new StateManager();
+//
+//        public static function get instance():IStateManager {
+//            trace("*** [HYDRA::StateManager.instance get]");
+//            return _instance;
+//        }
 
         public function StateManager() {
             super(NAME);
@@ -46,8 +44,7 @@ package com.hydraframework.plugins.stateManager {
          */
 
         private var browserManager:IBrowserManager;
-
-        private var parsing:Boolean = false;
+        private var parsing:Boolean     = false;
 
         /*
            --------------------------------------------------------------------
@@ -60,48 +57,63 @@ package com.hydraframework.plugins.stateManager {
         private var _dataProvider:ITreeDataDescriptor;
 
         public function set dataProvider(value:ITreeDataDescriptor):void {
+            trace("*** [HYDRA::StateManager.dataProvider set]");
             if (value != _dataProvider) {
                 _dataProvider = value;
             }
         }
 
         public function get dataProvider():ITreeDataDescriptor {
+            trace("*** [HYDRA::StateManager.dataProvider get]");
             return _dataProvider;
         }
 
         private var _keyField:String;
 
         public function set keyField(value:String):void {
+            trace("*** [HYDRA::StateManager.keyField set]");
             if (value != _keyField) {
                 _keyField = value;
             }
         }
 
         public function get keyField():String {
+            trace("*** [HYDRA::StateManager.keyField get]");
             return _keyField;
         }
 
         private var _labelField:String;
 
         public function set labelField(value:String):void {
+            trace("*** [HYDRA::StateManager.labelField set]");
             if (value != _labelField) {
                 _labelField = value;
             }
         }
 
         public function get labelField():String {
+            trace("*** [HYDRA::StateManager.labelField get]");
             return _labelField;
+        }
+
+        private var _dataField:String;
+
+        public function set dataField(value:String):void {
+            trace("*** [HYDRA::StateManager.dataField set]");
+            if (value != _dataField) {
+                _dataField = value;
+            }
+        }
+
+        public function get dataField():String {
+            trace("*** [HYDRA::StateManager.dataField get]");
+            return _dataField;
         }
 
         private var _currentState:Object;
 
-        public function set currentState(value:Object):void {
-            if (value != _currentState) {
-                setState(value);
-            }
-        }
-
         public function get currentState():Object {
+            trace("*** [HYDRA::StateManager.currentState get]");
             return _currentState;
         }
 
@@ -114,6 +126,7 @@ package com.hydraframework.plugins.stateManager {
          */
 
         public function setState(value:Object, updateHistory:Boolean = true):void {
+            trace("*** [HYDRA::StateManager.setState]");
             if (value != _currentState) {
                 _currentState = value;
 
@@ -123,18 +136,6 @@ package com.hydraframework.plugins.stateManager {
                 this.updateTitle();
                 this.dispatchEvent(new StateEvent(StateEvent.STATE_CHANGE, _currentState));
             }
-        }
-
-        public function getState():Object {
-            return _currentState;
-        }
-
-        public function getCurrentKey():String {
-            return _currentState && _currentState.hasOwnProperty(_keyField) ? _currentState[_keyField] : null;
-        }
-
-        public function getCurrentLabel():String {
-            return _currentState && _currentState.hasOwnProperty(_labelField) ? _currentState[_labelField] : null;
         }
 
         /*
@@ -152,7 +153,7 @@ package com.hydraframework.plugins.stateManager {
         }
 
         private function updateTitle():void {
-            browserManager.setTitle(getCurrentLabel());
+            browserManager.setTitle(_labelField);
         }
 
         private function updateURL():void {
@@ -162,7 +163,7 @@ package com.hydraframework.plugins.stateManager {
         }
 
         private function actuallyUpdateURL():void {
-            browserManager.setFragment(escape(getCurrentKey()));
+            browserManager.setFragment(escape(_keyField));
         }
 
         private function parseURL(event:Event):void {

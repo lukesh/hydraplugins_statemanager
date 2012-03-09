@@ -3,6 +3,7 @@
   <includeClasses>
     <classEntry path="com.hydraframework.plugins.stateManager.StateManager"/>
     <classEntry path="com.hydraframework.plugins.stateManager.events.StateEvent"/>
+    <classEntry path="com.hydraframework.plugins.stateManager.IStateManager"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

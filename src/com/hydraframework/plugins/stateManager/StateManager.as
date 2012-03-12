@@ -23,13 +23,6 @@ package com.hydraframework.plugins.stateManager {
 
         public static const NAME:String = "StateManager";
 
-//        private static const _instance:IStateManager = new StateManager();
-//
-//        public static function get instance():IStateManager {
-//            trace("*** [HYDRA::StateManager.instance get]");
-//            return _instance;
-//        }
-
         public function StateManager() {
             super(NAME);
             bindBrowserManager();
@@ -57,63 +50,54 @@ package com.hydraframework.plugins.stateManager {
         private var _dataProvider:ITreeDataDescriptor;
 
         public function set dataProvider(value:ITreeDataDescriptor):void {
-            trace("*** [HYDRA::StateManager.dataProvider set]");
             if (value != _dataProvider) {
                 _dataProvider = value;
             }
         }
 
         public function get dataProvider():ITreeDataDescriptor {
-            trace("*** [HYDRA::StateManager.dataProvider get]");
             return _dataProvider;
         }
 
         private var _keyField:String;
 
         public function set keyField(value:String):void {
-            trace("*** [HYDRA::StateManager.keyField set]");
             if (value != _keyField) {
                 _keyField = value;
             }
         }
 
         public function get keyField():String {
-            trace("*** [HYDRA::StateManager.keyField get]");
             return _keyField;
         }
 
         private var _labelField:String;
 
         public function set labelField(value:String):void {
-            trace("*** [HYDRA::StateManager.labelField set]");
             if (value != _labelField) {
                 _labelField = value;
             }
         }
 
         public function get labelField():String {
-            trace("*** [HYDRA::StateManager.labelField get]");
             return _labelField;
         }
 
         private var _dataField:String;
 
         public function set dataField(value:String):void {
-            trace("*** [HYDRA::StateManager.dataField set]");
             if (value != _dataField) {
                 _dataField = value;
             }
         }
 
         public function get dataField():String {
-            trace("*** [HYDRA::StateManager.dataField get]");
             return _dataField;
         }
 
         private var _currentState:Object;
 
         public function get currentState():Object {
-            trace("*** [HYDRA::StateManager.currentState get]");
             return _currentState;
         }
 
@@ -126,7 +110,6 @@ package com.hydraframework.plugins.stateManager {
          */
 
         public function setState(value:Object, updateHistory:Boolean = true):void {
-            trace("*** [HYDRA::StateManager.setState]");
             if (value != _currentState) {
                 _currentState = value;
 

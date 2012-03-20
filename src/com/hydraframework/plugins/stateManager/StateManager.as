@@ -121,6 +121,14 @@ package com.hydraframework.plugins.stateManager {
             }
         }
 
+        public function forward():String {
+            return null;
+        }
+
+        public function backward():String {
+            return null;
+        }
+
         /*
            --------------------------------------------------------------------
 

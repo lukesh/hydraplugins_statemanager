@@ -1,6 +1,7 @@
 package com.hydraframework.plugins.stateManager {
 
     import com.hydraframework.core.mvc.interfaces.IPlugin;
+
     import mx.controls.treeClasses.ITreeDataDescriptor;
 
     public interface IStateManager extends IPlugin {
@@ -30,7 +31,14 @@ package com.hydraframework.plugins.stateManager {
         // Methods
         //
         ////////////////////////////////////////////////////////////////
-
         function setState(value:Object, updateHistory:Boolean = true):void;
+        /**
+         * Move forward in the browser history. 'null' will be returned when at end
+         */
+        function forward():String;
+        /**
+         * Move backward in the browser history. 'null' will be returned when at beginning
+         */
+        function backward():String;
     }
 }
